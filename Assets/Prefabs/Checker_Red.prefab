@@ -22,9 +22,11 @@ GameObject:
   - component: {fileID: 33784504616788966}
   - component: {fileID: 136754566717995396}
   - component: {fileID: 23553135585378478}
+  - component: {fileID: 114637441661433644}
+  - component: {fileID: 54245396729969558}
   m_Layer: 0
   m_Name: Checker_Red
-  m_TagString: Untagged
+  m_TagString: GamePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,6 +85,40 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1686613432412476}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &54245396729969558
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1686613432412476}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &114637441661433644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1686613432412476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0b56eb7d8d32b4bbaa3bac7660575b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlight: {fileID: 4797004044438948, guid: 5367fdfb4772d074faf18c10667f4e7e, type: 2}
+  state: 1
+  coords: 0000000000000000
+  diagonals:
+  - {x: -1, y: 0, z: 1}
+  - {x: 1, y: 0, z: 1}
+  - {x: 1, y: 0, z: -1}
+  - {x: -1, y: 0, z: -1}
 --- !u!136 &136754566717995396
 CapsuleCollider:
   m_ObjectHideFlags: 1

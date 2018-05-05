@@ -40,9 +40,10 @@ GameObject:
   - component: {fileID: 33811149943067758}
   - component: {fileID: 136940502814921276}
   - component: {fileID: 23632864173490132}
+  - component: {fileID: 114213461958769126}
   m_Layer: 0
   m_Name: King_Red
-  m_TagString: Untagged
+  m_TagString: GamePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -170,6 +171,25 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114213461958769126
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1524771240008588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0b56eb7d8d32b4bbaa3bac7660575b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlight: {fileID: 4797004044438948, guid: 5367fdfb4772d074faf18c10667f4e7e, type: 2}
+  state: 3
+  coords: 0000000000000000
+  diagonals:
+  - {x: -1, y: 0, z: 1}
+  - {x: 1, y: 0, z: 1}
+  - {x: 1, y: 0, z: -1}
+  - {x: -1, y: 0, z: -1}
 --- !u!136 &136940502814921276
 CapsuleCollider:
   m_ObjectHideFlags: 1
