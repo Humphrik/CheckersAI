@@ -51,10 +51,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\BoardStates.cs" />
-     <Compile Include="Assets\CheckerPiece.cs" />
-     <Compile Include="Assets\Highlight.cs" />
-     <Compile Include="Assets\InitializeBoard.cs" />
+     <Compile Include="Assets\Scripts\BoardStates.cs" />
+     <Compile Include="Assets\Scripts\CheckerPiece.cs" />
+     <Compile Include="Assets\Scripts\Highlight.cs" />
+     <Compile Include="Assets\Scripts\InitializeBoard.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
