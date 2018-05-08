@@ -18,4 +18,7 @@ public class Move : MonoBehaviour {
 		endPos=end;
 		capped.AddRange(captured);
 	}
+	public Move (){
+		
+	}
 }

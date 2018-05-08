@@ -138,11 +138,22 @@ public class MinimaxBase : MonoBehaviour {
 	//But how?
 	//idk
 	List<Move> getCaptures(int[] coords){
+		int color = coords [2];
 		List<Move> moves = new List<Move> ();
+		moves.Add (new Move ());
 		if (board [coords [0] + 1, coords [1] - 1] == 0 || board [coords [0] - 1, coords [1] - 1] == 0) {
 			
 		} 
-		return moves;
+		return moves.AddRange(getCaptures(moves));
+	}
+
+	List<Move> getCaptures(List<Move> moves){
+		List<Move> output = new List<Move> ();
+		output.Add (new Move ());
+		if (moves.Count == 0) {
+			return output;
+		}
+		return output;
 	}
 
 	//Checks if the array game has been won
@@ -158,12 +169,20 @@ public class MinimaxBase : MonoBehaviour {
 
 	//Makes a move on the array board
 	void make (Move move){
-		
+		board [move.startPos [0], move.startPos [1]] = 0;
+		board [move.endPos [0], move.endPos [1]] = move.startPos [2];
+		foreach (int[] cap in move.capped) {
+			board [cap [0], cap [1]] = 0;
+		}
 	}
 
 	//Retracts a move on the array board
 	void retract (Move move){
-		
+		board [move.startPos [0], move.startPos [1]] = move.startPos [2];
+		board [move.endPos [0], move.endPos [1]] = 0;
+		foreach (int[] cap in move.capped) {
+			board [cap [0], cap [1]] = cap[2];
+		}
 	}
 
 	//Heuristic evaluation of non-terminal game states
