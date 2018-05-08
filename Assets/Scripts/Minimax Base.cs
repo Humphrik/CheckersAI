@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MinimaxBase : MonoBehaviour {
-	bool minimaxActive = false;
-	int[][] board;
-	GameObject manager;
+	//All you have to do to activate the AI is change this boool
+	public bool minimaxActive = false;
+
+	//Creates the array board used for the tree
+	//Just like some family trees, this tree has slaves and masters
+	int[,] board = new int[8,8];
+
+	//Sets the max depth of the tree
+	private int maxDepth = 5;
+
+	public GameObject manager;
 	
 	// If it's the correct turn and the AI is active, minimax is run
 	void Update () {
@@ -15,72 +23,176 @@ public class MinimaxBase : MonoBehaviour {
 	}
 
 	void minimax (){
-		int[] bestMove;
-		int depth = 5;
+		Move bestMove;
 		int bestScore = -9999;
-		board = boardToArray();
-		int[][] legal = getLegalMoves ();
-		foreach (int[] move in legal) {
-			//make (move, board);
-			int score = min ();
+		boardToArray();
+		List<Move> legal = getLegalMoves(2);
+		foreach (Move move in legal) {
+			//make (move);
+			int score = min (0);
 			if (score > bestScore) {
 				bestScore = score;
 				bestMove = move;
 			}
-			//retract (move, board);
+			//retract (move);
 		}
 
 	}
 
 	//Finds best move for AI
-	int min (){
+	int min (int depth){
 		if (gg (2))
 			return 1000;
-//		else if(){ }
+		else if (depth == maxDepth) {
+			return heval ();
+		} else {
+			int bestScore = 9999;
+			List<Move> legal = getLegalMoves(2);
+			foreach (Move move in legal){
+				//make (move);
+				int score = max (depth+1);
+				if (score<bestScore){
+					bestScore=score;
+				}
+				//retract (move);
+			}
+			return bestScore;
+		}
 	}
 
 	//Finds best move for Human
-//	int max (){
-//		if (gg (1))
-//			return -1000;
-//		return 0;
-//	}
-
-	//Turns the physical board into an array that can be passed through the minimax
-	int[][] boardToArray () {
-		int[][] gameboard = new int[8][8];
-		for(int i=0; i<8; i++){
-			for (int k = 0; k<8; k++){
-				gameboard [i][k] = 0;
+	int max (int depth){
+		if (gg (1))
+			return -1000;
+		else if (depth == maxDepth) {
+			return heval ();
+		} else {
+			int bestScore = -9999;
+			List<Move> legal = getLegalMoves(1);
+			foreach (Move move in legal){
+				//make (move);
+				int score = min (depth+1);
+				if (score>bestScore){
+					bestScore=score;
+				}
+				//retract (move);
 			}
-		}
-		foreach (GameObject checker in GameObject.FindGameObjectsWithTag("GamePiece")) {
-			gameboard [checker.GetComponent<CheckerPiece>().coords [0]] [checker.GetComponent<CheckerPiece>().coords [1]] = checker.GetComponent<CheckerPiece>().state;
+			return bestScore;
 		}
 	}
 
+	//Turns the physical board into an array that can be passed through the minimax
+	void boardToArray () {
+		for(int i=0; i<8; i++){
+			for (int k = 0; k<8; k++){
+				board [i,k] = 0;
+			}
+		}
+		foreach (GameObject checker in GameObject.FindGameObjectsWithTag("GamePiece")) {
+			board [checker.GetComponent<CheckerPiece>().coords [0],checker.GetComponent<CheckerPiece>().coords [1]] = checker.GetComponent<CheckerPiece>().state;
+		}
+	}
+
+	//Gets the pieces for a team in format (x-coord, y-coord, state)
+	List<int[]> getPieceCoords(int color){
+		List<int[]> coords = new List<int[]> ();
+		for (int i = 0; i < 8; i++) {
+			for (int k = 0; k < 8; k++) {
+				if (board [i,k] == color || board [i,k] == color + 2)
+					coords.Add (new int[]{ i, k, board[i,k] });
+			}
+		}
+		return coords;
+	}
+
 	//Gets a list of all legal moves
-//	//How these moves are formatted tbd
-//	int[][] getLegalMoves(){
-//		
-//	}
+	//How these moves are formatted tbd
+	List<Move> getLegalMoves(int color){
+		List<int[]> coords = getPieceCoords (color);
+		List<Move> moves = new List<Move> ();
+		foreach (int[] piece in coords) {
+			moves.AddRange(getAdjacentMoves (piece));
+			moves.AddRange(getCaptures (piece));
+		}
+		return moves;
+	}
+
+	//THIS METHOD WILL NOT WORK PROPERLY YET
+	//I mean it might work
+	//I'm just 90% sure that it won't
+	List<Move> getAdjacentMoves(int[] coords){
+		List<Move> moves = new List<Move> ();
+		if (board [coords [0] + 1, coords [1] + 1] == 0 || board [coords [0] - 1, coords [1] + 1] == 0) {
+			//Add the move
+		}
+		if (coords [2] == 3 || coords [2] == 4) {
+			if (board [coords [0] + 1, coords [1] - 1] == 0 || board [coords [0] - 1, coords [1] - 1] == 0) {
+				//Add the move
+			}
+		}
+		return moves;
+	}
+
+	//Is this method recursive? I don't know yet
+	//Maybe
+	//But how?
+	//idk
+	List<Move> getCaptures(int[] coords){
+		List<Move> moves = new List<Move> ();
+		if (board [coords [0] + 1, coords [1] - 1] == 0 || board [coords [0] - 1, coords [1] - 1] == 0) {
+			
+		} 
+		return moves;
+	}
 
 	//Checks if the array game has been won
 	bool gg (int color){
 		for  (int i=0; i<8; i++){
 			for (int k = 0; k<8; k++){
-				if (board[i][k] == (color)||board[i][k] == (color+2))
+				if (board[i,k] == (color)||board[i,k] == (color+2))
 					return false;
 			}
 		}
 		return true;
 	}
 
+	//Makes a move on the array board
+	void make (Move move){
+		
+	}
+
+	//Retracts a move on the array board
+	void retract (Move move){
+		
+	}
+
 	//Heuristic evaluation of non-terminal game states
 	//Who the fuck wrote that
 	//That sounds stupid
 	//It tells you who's winning
-//	int heval (int [][] board){
-//		
-//	}
+	int heval (){
+		int weight1 = 1;
+		int weight2 = 1;
+		return (piecesLeft ()*weight1) + (distToEdge ()*weight2);
+	}
+
+	int piecesLeft(){
+		int red = 0;
+		int blue = 0;
+		for  (int i=0; i<8; i++){
+			for (int k = 0; k<8; k++){
+				if (board [i,k] == (1) || board [i,k] == (3)) {
+					red++;
+				}
+				if (board [i,k] == (2) || board [i,k] == (4)) {
+					blue++;
+				}
+			}
+		}
+		return blue - red;
+	}
+
+	int distToEdge(){
+		return 0;
+	}
 }
