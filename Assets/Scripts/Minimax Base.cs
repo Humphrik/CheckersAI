@@ -22,6 +22,9 @@ public class MinimaxBase : MonoBehaviour {
 //		}
 	}
 
+	//Easier way of referring to the corners.
+	int[,] Corners = new int[,] {{1,1,0},{1,-1,0},{-1,1,0},{-1,-1,0}};
+
 	void minimax (){
 		Move bestMove;
 		int bestScore = -9999;
@@ -140,19 +143,27 @@ public class MinimaxBase : MonoBehaviour {
 	List<Move> getCaptures(int[] coords){
 		int color = coords [2];
 		List<Move> moves = new List<Move> ();
-		moves.Add (new Move ());
 		if (board [coords [0] + 1, coords [1] - 1] == 0 || board [coords [0] - 1, coords [1] - 1] == 0) {
 			
 		} 
-		return moves.AddRange(getCaptures(moves));
+		moves.AddRange (getCaptures (moves));
+		return moves;
 	}
 
 	List<Move> getCaptures(List<Move> moves){
 		List<Move> output = new List<Move> ();
-		output.Add (new Move ());
-		if (moves.Count == 0) {
-			return output;
+
+		foreach (Move move in moves) {
+			foreach (int[] corner in Corners) {
+				if (opponents.Contains(board [move.endPos [0] + corner [0], move.endPos [1] + corner [1]]) && board [move.endPos [0] + corner [0] + corner [0], move.endPos [1] + corner [1] + corner [1]]) {
+					int[] newStart = move.startPos;
+					int[] newEnd = new int[] {move.endPos [0] + 2 * corner [0], move.endPos [1] + 2 * corner [1] };
+					int[] captured = new int[] {move.endPos [0] + corner [0], move.endPos [1] + corner [1] };
+					output.Add (new Move (newStart, newEnd, move.capped.Add (captured)));
+				}
+			}
 		}
+		output.AddRange (getCaptures (output));
 		return output;
 	}
 
