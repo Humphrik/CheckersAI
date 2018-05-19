@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class InitializeBoard : MonoBehaviour {
 
 	// Player Turns alternate between 1 (red) and -1 (blue).
-	int playerTurn = 1;
+	public int playerTurn = 1;
 
 	// Important "locks" to allow for chaining of captures.
 	bool chainLock = false;

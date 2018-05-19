@@ -17,13 +17,17 @@ public class MinimaxBase : MonoBehaviour {
 	
 	// If it's the correct turn and the AI is active, minimax is run
 	void Update () {
-//		if (minimaxActive && InitializeBoard.playerTurn == 1) {
-//			minimax();
-//		}
+		if (minimaxActive && manager.GetComponent<InitializeBoard>().playerTurn == 1) {
+			minimax();
+		}
 	}
 
 	//Easier way of referring to the corners.
-	int[,] Corners = new int[,] {{1,1,0},{1,-1,0},{-1,1,0},{-1,-1,0}};
+	int[][] Corners = new int[4][];
+//	Corners [0] = new int [] {1,1,0};
+//	Corners [1] = new int [] {1,-1,0};
+//	Corners [2] = new int [] {-1,1,0};
+//	Corners [3] = new int [] {-1,-1,0};
 
 	void minimax (){
 		Move bestMove;
@@ -152,14 +156,17 @@ public class MinimaxBase : MonoBehaviour {
 
 	List<Move> getCaptures(List<Move> moves){
 		List<Move> output = new List<Move> ();
-
+		//FIX THIS
+		int opponent = 0;
 		foreach (Move move in moves) {
 			foreach (int[] corner in Corners) {
-				if (opponents.Contains(board [move.endPos [0] + corner [0], move.endPos [1] + corner [1]]) && board [move.endPos [0] + corner [0] + corner [0], move.endPos [1] + corner [1] + corner [1]]) {
+				if (board [move.endPos [0] + corner [0], move.endPos [1] + corner [1]] == opponent && board [move.endPos [0] + corner [0] + corner [0], move.endPos [1] + corner [1] + corner [1]] == 0) {
 					int[] newStart = move.startPos;
 					int[] newEnd = new int[] {move.endPos [0] + 2 * corner [0], move.endPos [1] + 2 * corner [1] };
 					int[] captured = new int[] {move.endPos [0] + corner [0], move.endPos [1] + corner [1] };
-					output.Add (new Move (newStart, newEnd, move.capped.Add (captured)));
+					Move toAdd = new Move (newStart, newEnd, move.capped);
+					toAdd.capped.Add (captured);
+					output.Add (toAdd);
 				}
 			}
 		}
