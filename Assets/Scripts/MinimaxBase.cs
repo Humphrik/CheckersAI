@@ -8,10 +8,10 @@ public class MinimaxBase : MonoBehaviour {
 
 	//Creates the array board used for the tree
 	//Just like some family trees, this tree has slaves and masters
-	int[,] board = new int[8,8];
+	public int[,] board = new int[8,8];
 
 	//Sets the max depth of the tree
-	private int maxDepth = 5;
+	private int maxDepth = 1;
 
 	public GameObject manager;
 	
@@ -113,7 +113,6 @@ public class MinimaxBase : MonoBehaviour {
 	}
 
 	//Gets a list of all legal moves
-	//How these moves are formatted tbd
 	List<Move> getLegalMoves(int color){
 		List<int[]> coords = getPieceCoords (color);
 		List<Move> moves = new List<Move> ();
@@ -124,9 +123,7 @@ public class MinimaxBase : MonoBehaviour {
 		return moves;
 	}
 
-	//THIS METHOD WILL NOT WORK PROPERLY YET
-	//I mean it might work
-	//I'm just 90% sure that it won't
+	//Gets list of moves that can be made adjecently
 	List<Move> getAdjacentMoves(int[] coords){
 		List<Move> moves = new List<Move> ();
 		if (board [coords [0] + 1, coords [1] + 1] == 0 || board [coords [0] - 1, coords [1] + 1] == 0) {
@@ -140,10 +137,7 @@ public class MinimaxBase : MonoBehaviour {
 		return moves;
 	}
 
-	//Is this method recursive? I don't know yet
-	//Maybe
-	//But how?
-	//idk
+	//Gets list of captures that can be made
 	List<Move> getCaptures(int[] coords){
 		int color = coords [2];
 		List<Move> moves = new List<Move> ();
