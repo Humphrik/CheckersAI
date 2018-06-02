@@ -20,6 +20,7 @@ public class MinimaxBase : MonoBehaviour {
 	// If it's the correct turn and the AI is active, minimax is run
 	void Update () {
 		if (minimaxActive && manager.GetComponent<InitializeBoard>().playerTurn == -1&&minimaxRunning==false) {
+			Debug.Log ("Hello World");
 			minimaxRunning = true;
 			minimax();
 		}
@@ -44,6 +45,7 @@ public class MinimaxBase : MonoBehaviour {
 		}
 		MakeMove (bestMove);
 		manager.GetComponent<InitializeBoard> ().playerTurn = 1;
+		Debug.Log ("Minimax Finished");
 		minimaxRunning = false;
 	}
 
@@ -161,11 +163,11 @@ public class MinimaxBase : MonoBehaviour {
 		int oppo = (coords [2] + 1) % 2;
 		List<Move> moves = new List<Move> ();
 		for (int i=0; i<4; i++) {
-			if(IsValidPosition(coords[0]+diagonalCoords[i,0], coords[1]+diagonalCoords[i,1])){
+			if(IsValidPosition(coords[0]+diagonalCoords[i,0], coords[1]+diagonalCoords[i,1])&&IsValidPosition(coords[0]+2*diagonalCoords[i,0], coords[1]+2*diagonalCoords[i,1])){
 				if(board[coords[0]+diagonalCoords[i,0], coords[1]+diagonalCoords[i,1]]%2==oppo){
 					if(board[coords[0]+2*diagonalCoords[i,0], coords[1]+2*diagonalCoords[i,1]]==0){
 						List<int[]> captured = new List<int[]> ();
-						captured.Add (new int[]{ coords [0] + 2 * diagonalCoords [i, 0], coords [1] + 2 * diagonalCoords [i, 1] });
+						captured.Add (new int[]{ coords [0] + 2 * diagonalCoords [i, 0], coords [1] + 2 * diagonalCoords [i, 1], board[coords [0] + 2 * diagonalCoords [i, 0], coords [1] + 2 * diagonalCoords [i, 1]] });
 						Move capturing = new Move(coords, new int[] {coords[0]+2*diagonalCoords[i,0], coords[1]+2*diagonalCoords[i,1], coords[2]}, captured);
 						moves.Add (capturing);
 					}
@@ -185,7 +187,7 @@ public class MinimaxBase : MonoBehaviour {
 					if (board [move.endPos [0] + diagonalCoords [i, 0], move.endPos [1] + diagonalCoords [i, 1]] == opponent && board [move.endPos [0] + diagonalCoords [i, 0] + diagonalCoords [i, 0], move.endPos [1] + diagonalCoords [i, 1] + diagonalCoords [i, 1]] == 0) {
 						int[] newStart = move.startPos;
 						int[] newEnd = new int[] { move.endPos [0] + 2 * diagonalCoords [i, 0], move.endPos [1] + 2 * diagonalCoords [i, 1] };
-						int[] captured = new int[] { move.endPos [0] + diagonalCoords [i, 0], move.endPos [1] + diagonalCoords [i, 1] };
+						int[] captured = new int[] { move.endPos [0] + diagonalCoords [i, 0], move.endPos [1] + diagonalCoords [i, 1], board[move.endPos [0] + diagonalCoords [i, 0], move.endPos [1] + diagonalCoords [i, 1]] };
 						Move toAdd = new Move (newStart, newEnd, move.capped);
 						toAdd.capped.Add (captured);
 						output.Add (toAdd);
@@ -224,8 +226,10 @@ public class MinimaxBase : MonoBehaviour {
 	void retract (Move move){
 		board [move.startPos [0], move.startPos [1]] = move.startPos [2];
 		board [move.endPos [0], move.endPos [1]] = 0;
-		foreach (int[] cap in move.capped) {
-			board [cap [0], cap [1]] = cap[2];
+		if (move.capped.Count != 0) {
+			foreach (int[] cap in move.capped) {
+				board [cap [0], cap [1]] = cap [2];
+			}
 		}
 	}
 

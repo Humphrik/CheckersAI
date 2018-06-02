@@ -52,7 +52,9 @@ public class InitializeBoard : MonoBehaviour {
 		if (chainLock && chainChecker.GetComponent<CheckerPiece> ().numValidMoves == 0) {
 			// If there are no more valid, chained moves, the game moves on to the other player's turn.
 			chainLock = false;
+			Debug.Log ("1");
 			playerTurn *= -1;
+			Debug.Log ("2");
 			foreach (GameObject highlights in GameObject.FindGameObjectsWithTag("Highlight"))
 				GameObject.Destroy (highlights);
 			CheckWinner();
